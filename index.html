@@ -2,47 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Image</title>
+    <title>Football Betting Odds Calculator</title>
     <style>
-        img {
-            width: 200px; /* Adjust the size as needed */
-            display: block;
-        }
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f8f8; }
+        .container { max-width: 500px; margin: auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
+        label, input, button { display: block; width: 100%; margin-bottom: 16px; }
+        input[type="text"] { padding: 8px; }
+        button { padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin-top: 24px; padding: 12px; background: #e3f2fd; border-radius: 5px; }
     </style>
 </head>
 <body>
-    <h1>Daily Token Registration Price ₦5,300</h1>
-    <img id="image" src="AddText_04-04-01.03.00.png" alt="Image" />
-    
-    <h1>Countdown Timer</h1>
-    <div id="countdown">60</div>
-
-    <p>Do not close your browser after making payment. Please do not attempt transfers via POS, ATMs, or deposit over-the-counter to this account number.</p>
-
+    <div class="container">
+        <h2>Football Betting Odds Calculator</h2>
+        <label for="performanceA">Team A Last 10 Game Results (W/D/L):</label>
+        <input type="text" id="performanceA" placeholder="e.g. W W D L W W D W L D" maxlength="29">
+        <label for="performanceB">Team B Last 10 Game Results (W/D/L):</label>
+        <input type="text" id="performanceB" placeholder="e.g. D W L L W D W L W W" maxlength="29">
+        <button onclick="calculateOdds()">Calculate Odds</button>
+        <div id="output" class="result"></div>
+    </div>
     <script>
-        // Set the countdown time in seconds
-        var timeLeft = 60;
+        function getPerformanceStats(results) {
+            if (results.length !== 10) return null;
+            let points = results.reduce((acc, val) => acc + (val === 'W' ? 3 : val === 'D' ? 1 : 0), 0);
+            let perf = points / 30; // 0 to 1
+            let odds = (1 + (1 - perf)).toFixed(2);
+            return { points, perf, odds };
+        }
+        function calculateOdds() {
+            let inputA = document.getElementById('performanceA').value.trim().toUpperCase();
+            let inputB = document.getElementById('performanceB').value.trim().toUpperCase();
+            let resultsA = inputA.split(' ').filter(x => x === 'W' || x === 'D' || x === 'L');
+            let resultsB = inputB.split(' ').filter(x => x === 'W' || x === 'D' || x === 'L');
+            let statsA = getPerformanceStats(resultsA);
+            let statsB = getPerformanceStats(resultsB);
 
-        // Update the count down every 1 second
-        var countdownTimer = setInterval(function() {
-            // Display the time left
-            document.getElementById("countdown").textContent = timeLeft;
-            
-            // Decrease the time left by 1
-            timeLeft--;
-
-            // If the countdown is over, stop the timer and display the message with a link
-            if (timeLeft < 0) {
-                clearInterval(countdownTimer);
-                document.getElementById("countdown").innerHTML = '<a href="https://sambo7785.github.io/Daily-Token-Registration/">I have sent</a>';
+            if (!statsA || !statsB) {
+                document.getElementById('output').innerHTML = "Please enter exactly 10 results for both teams using W, D, or L (separated by spaces).";
+                return;
             }
 
-            // If the countdown reaches 5 seconds, hide the image
-            if (timeLeft === 5) {
-                document.getElementById("image").style.display = 'none';
-            }
-        }, 1000);
+            document.getElementById('output').innerHTML = `
+                <b>Team A:</b><br>
+                Performance points: ${statsA.points} / 30<br>
+                Performance percentage: ${(statsA.perf*100).toFixed(1)}%<br>
+                <b>Suggested Betting Odd (Decimal): ${statsA.odds}</b>
+                <hr>
+                <b>Team B:</b><br>
+                Performance points: ${statsB.points} / 30<br>
+                Performance percentage: ${(statsB.perf*100).toFixed(1)}%<br>
+                <b>Suggested Betting Odd (Decimal): ${statsB.odds}</b>
+            `;
+        }
     </script>
 </body>
 </html>
