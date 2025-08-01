@@ -1,60 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Football Betting Odds Calculator</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; background: #f8f8f8; }
-        .container { max-width: 500px; margin: auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
-        label, input, button { display: block; width: 100%; margin-bottom: 16px; }
-        input[type="text"] { padding: 8px; }
-        button { padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-        .result { margin-top: 24px; padding: 12px; background: #e3f2fd; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <title>EmpireStateBank Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      overflow: hidden;
+    }
+    /* Loader Styles */
+    .loader-bg {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: radial-gradient(circle at 50% 50%, #23243b 60%, #000 100%);
+    }
+    .loader-img {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      box-shadow: 0 0 42px #ff9800, 0 0 12px #2196f3;
+      object-fit: cover;
+      border: 3px solid #fff;
+      animation: loaderSpin 1.2s linear infinite;
+      margin-bottom: 36px;
+      background: #fff;
+      display: block;
+    }
+    @keyframes loaderSpin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    .blinking {
+      font-size: 2.4rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-align: center;
+      background: linear-gradient(90deg, #ff9800, #2ecc40 20%, #2196f3 40%, #e91e63 60%, #ffd600 80%, #00e676 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      animation: beautifulBlink 2.2s infinite;
+      text-shadow:
+        0 0 8px #fff, 0 0 24px #ff9800, 0 0 12px #2196f3, 0 0 18px #2ecc40, 0 0 4px #e91e63;
+    }
+    @keyframes beautifulBlink {
+      0%   { opacity: 0; transform: scale(0.98);}
+      10%  { opacity: 1; transform: scale(1.09);}
+      30%  { opacity: 1; transform: scale(1);}
+      50%  { opacity: 0.3; transform: scale(1.03);}
+      60%  { opacity: 1; transform: scale(1.08);}
+      80%  { opacity: 1; transform: scale(1);}
+      100% { opacity: 0; transform: scale(0.98);}
+    }
+    .loader-caption {
+      font-size: 1.08rem;
+      color: #ffd600;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin-top: 15px;
+      text-shadow: 0 0 8px #2196f3;
+      animation: fadeInLoaderCaption 2.1s;
+    }
+    @keyframes fadeInLoaderCaption {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+
+    /* Program Select Styles */
+    .program-select {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0; left: 0;
+      background: #000;
+      animation: fadeIn 1s;
+      padding-top: 42px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    .program-img {
+      width: 110px;
+      height: 110px;
+      margin-bottom: 28px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 2px solid #fff176;
+      box-shadow: 0 0 20px #2196f3;
+      background: #fff;
+    }
+    .program-title {
+      font-size: 2.1rem;
+      color: #fff;
+      margin-bottom: 40px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #2196f3, 0 0 4px #ff9800;
+    }
+    .program-list {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      width: 320px;
+      max-width: 95vw;
+    }
+    .program-card {
+      background: linear-gradient(90deg, #181818 70%, #23243b 100%);
+      border-radius: 10px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 16px rgba(44,204,64,0.18), 0 0px 12px #2196f344;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      border: 1.5px solid #ffd600;
+    }
+    .prog-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2196f3;
+      margin-bottom: 8px;
+      text-shadow: 0 0 4px #fff;
+    }
+    .prog-desc {
+      font-size: 1rem;
+      color: #ededed;
+      margin-bottom: 12px;
+    }
+    .prog-desc span {
+      font-weight: bold;
+      text-shadow: 0 0 2px #fff;
+    }
+    .prog-link {
+      display: inline-block;
+      background: linear-gradient(90deg,#ff9800 30%, #2196f3 70%);
+      color: #fff;
+      font-weight: 600;
+      padding: 7px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+      font-size: 1rem;
+      box-shadow: 0 2px 8px #2196f388;
+    }
+    .prog-link:hover {
+      background: linear-gradient(90deg,#2196f3 30%, #ff9800 70%);
+      color: #fff;
+      transform: scale(1.07);
+    }
+    @media (max-width: 500px) {
+      .program-list {
+        width: 98vw;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Football Betting Odds Calculator</h2>
-        <label for="performanceA">Team A Last 10 Game Results (W/D/L):</label>
-        <input type="text" id="performanceA" placeholder="e.g. W W D L W W D W L D" maxlength="29">
-        <label for="performanceB">Team B Last 10 Game Results (W/D/L):</label>
-        <input type="text" id="performanceB" placeholder="e.g. D W L L W D W L W W" maxlength="29">
-        <button onclick="calculateOdds()">Calculate Odds</button>
-        <div id="output" class="result"></div>
+  <!-- Loader Layout -->
+  <div class="loader-bg" id="loaderScreen">
+      <!-- Loader Image (rotating) - replace src with your logo/image if needed -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Bank_of_EmpireState.png" alt="EmpireStateBank Loader" class="loader-img">
+      <div class="blinking" id="welcomeMsg">Welcome to EmpireStateBank Program</div>
+      <div class="loader-caption">Please wait while we prepare your experience...</div>
+  </div>
+  <!-- Program Select Page -->
+  <div class="program-select" id="programScreen">
+    <!-- Image before the program selection (replace src as needed) -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Bank_of_EmpireState.png" alt="EmpireStateBank Icon" class="program-img">
+    <div class="program-title">Select Your Preferred Program</div>
+    <div class="program-list">
+      <div class="program-card">
+        <div class="prog-name">EmpireBot</div>
+        <div class="prog-desc">Betting Odd Trading: <span style="color:#ffd600;">Low profit</span>.</div>
+        <a class="prog-link" href="https://empirebot.example.com" target="_blank">Open EmpireBot</a>
+      </div>
+      <div class="program-card">
+        <div class="prog-name">EmpireBet</div>
+        <div class="prog-desc">Football betting Tips: <span style="color:#e91e63;">High Profit</span>.</div>
+        <a class="prog-link" href="https://empirebet.example.com" target="_blank">Open EmpireBet</a>
+      </div>
     </div>
-    <script>
-        function getPerformanceStats(results) {
-            if (results.length !== 10) return null;
-            let points = results.reduce((acc, val) => acc + (val === 'W' ? 3 : val === 'D' ? 1 : 0), 0);
-            let perf = points / 30; // 0 to 1
-            let odds = (1 + (1 - perf)).toFixed(2);
-            return { points, perf, odds };
-        }
-        function calculateOdds() {
-            let inputA = document.getElementById('performanceA').value.trim().toUpperCase();
-            let inputB = document.getElementById('performanceB').value.trim().toUpperCase();
-            let resultsA = inputA.split(' ').filter(x => x === 'W' || x === 'D' || x === 'L');
-            let resultsB = inputB.split(' ').filter(x => x === 'W' || x === 'D' || x === 'L');
-            let statsA = getPerformanceStats(resultsA);
-            let statsB = getPerformanceStats(resultsB);
-
-            if (!statsA || !statsB) {
-                document.getElementById('output').innerHTML = "Please enter exactly 10 results for both teams using W, D, or L (separated by spaces).";
-                return;
-            }
-
-            document.getElementById('output').innerHTML = `
-                <b>Team A:</b><br>
-                Performance points: ${statsA.points} / 30<br>
-                Performance percentage: ${(statsA.perf*100).toFixed(1)}%<br>
-                <b>Suggested Betting Odd (Decimal): ${statsA.odds}</b>
-                <hr>
-                <b>Team B:</b><br>
-                Performance points: ${statsB.points} / 30<br>
-                Performance percentage: ${(statsB.perf*100).toFixed(1)}%<br>
-                <b>Suggested Betting Odd (Decimal): ${statsB.odds}</b>
-            `;
-        }
-    </script>
+  </div>
+  <script>
+    // Show loader/welcome for 7 seconds, then show program selection screen
+    setTimeout(function() {
+      document.getElementById('loaderScreen').style.display = 'none';
+      document.getElementById('programScreen').style.display = 'flex';
+      document.body.style.overflow = 'auto';
+    }, 7000);
+  </script>
 </body>
 </html>
