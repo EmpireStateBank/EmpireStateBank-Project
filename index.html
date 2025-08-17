@@ -5,210 +5,429 @@
   <title>EmpireStateBank Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body, html {
+    html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      background: #000;
+      font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
+      background: #101014;
       color: #fff;
-      font-family: 'Segoe UI', Arial, sans-serif;
       overflow: hidden;
     }
-    /* Loader Styles */
-    .loader-bg {
+
+    /* Main Loader Styles */
+    .main-loader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      width: 100vw;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: radial-gradient(circle at 50% 50%, #23243b 60%, #000 100%);
+      background: radial-gradient(ellipse at center, #191a1e 85%, #101014 100%);
+      z-index: 1000;
+      transition: opacity 0.4s;
     }
-    .loader-img {
-      width: 110px;
-      height: 110px;
+    .main-loader .loader-spinner-wrap {
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .main-loader .loader-img-spin {
+      width: 95px;
+      height: 95px;
       border-radius: 50%;
-      box-shadow: 0 0 42px #ff9800, 0 0 12px #2196f3;
+      border: 4px solid #fff;
       object-fit: cover;
-      border: 3px solid #fff;
-      animation: loaderSpin 1.2s linear infinite;
-      margin-bottom: 36px;
       background: #fff;
+      box-shadow: 0 0 28px #ffc10799, 0 0 13px #00bcd4bb;
+      animation: loaderSpin 1.2s linear infinite;
       display: block;
     }
     @keyframes loaderSpin {
       0% { transform: rotate(0deg);}
       100% { transform: rotate(360deg);}
     }
-
-    .blinking {
-      font-size: 2.4rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-      letter-spacing: 2px;
+    .main-loader .loader-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      color: #ffc107;
+      text-shadow: 0 0 18px #00bcd4, 0 0 3px #fff;
       text-align: center;
-      background: linear-gradient(90deg, #ff9800, #2ecc40 20%, #2196f3 40%, #e91e63 60%, #ffd600 80%, #00e676 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      animation: beautifulBlink 2.2s infinite;
-      text-shadow:
-        0 0 8px #fff, 0 0 24px #ff9800, 0 0 12px #2196f3, 0 0 18px #2ecc40, 0 0 4px #e91e63;
+      animation: fadeInDown 1.1s;
     }
-    @keyframes beautifulBlink {
-      0%   { opacity: 0; transform: scale(0.98);}
-      10%  { opacity: 1; transform: scale(1.09);}
-      30%  { opacity: 1; transform: scale(1);}
-      50%  { opacity: 0.3; transform: scale(1.03);}
-      60%  { opacity: 1; transform: scale(1.08);}
-      80%  { opacity: 1; transform: scale(1);}
-      100% { opacity: 0; transform: scale(0.98);}
-    }
-    .loader-caption {
-      font-size: 1.08rem;
-      color: #ffd600;
+    .main-loader .loader-caption {
+      color: #fff;
+      font-size: 1.17rem;
+      letter-spacing: 1.2px;
       font-weight: 500;
-      letter-spacing: 1px;
-      margin-top: 15px;
-      text-shadow: 0 0 8px #2196f3;
-      animation: fadeInLoaderCaption 2.1s;
+      text-align: center;
+      animation: fadeIn 2s;
+      text-shadow: 0 0 8px #00bcd4cc;
     }
-    @keyframes fadeInLoaderCaption {
-      from { opacity: 0;}
-      to { opacity: 1;}
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes fadeInDown {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
     }
 
-    /* Program Select Styles */
-    .program-select {
-      display: none;
+    /* Main Content Layout */
+    .main-content {
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
-      width: 100vw;
-      position: absolute;
-      top: 0; left: 0;
-      background: #000;
-      animation: fadeIn 1s;
-      padding-top: 42px;
+      padding-top: 48px;
+      background: #101014;
+      opacity: 0;
+      transition: opacity 0.7s;
+      position: relative;
+      z-index: 1;
     }
-    @keyframes fadeIn {
-      from { opacity: 0;}
-      to { opacity: 1;}
+    .main-content.active {
+      opacity: 1;
     }
-    .program-img {
-      width: 110px;
-      height: 110px;
-      margin-bottom: 28px;
-      border-radius: 20px;
-      object-fit: cover;
-      border: 2px solid #fff176;
-      box-shadow: 0 0 20px #2196f3;
-      background: #fff;
-    }
-    .program-title {
-      font-size: 2.1rem;
-      color: #fff;
-      margin-bottom: 40px;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #2196f3, 0 0 4px #ff9800;
-    }
-    .program-list {
+    .app-logo-wrap {
       display: flex;
-      flex-direction: column;
-      gap: 25px;
-      width: 320px;
-      max-width: 95vw;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
     }
+    .app-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      border: 2.5px solid #ffc107;
+      box-shadow: 0 0 16px #00bcd455;
+      object-fit: cover;
+      background: #fff;
+      display: block;
+    }
+    .main-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 2px 18px #00bcd433;
+    }
+    .subtitle {
+      color: #00bcd4;
+      font-size: 1.13rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+      text-align: center;
+      letter-spacing: 1.1px;
+    }
+
+    /* Programs Flex Grid */
+    .programs-flex {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 95vw;
+      max-width: 830px;
+      margin: 0 auto;
+    }
+
+    /* Card */
     .program-card {
-      background: linear-gradient(90deg, #181818 70%, #23243b 100%);
-      border-radius: 10px;
-      padding: 22px 24px;
-      box-shadow: 0 4px 16px rgba(44,204,64,0.18), 0 0px 12px #2196f344;
+      background: linear-gradient(120deg, #17191e 74%, #23282e 100%);
+      border-radius: 22px;
+      box-shadow: 0 8px 30px #00bcd41a, 0 1.5px 12px #ffc10744;
+      padding: 36px 22px 26px 22px;
+      min-width: 265px;
+      max-width: 340px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      border: 1.5px solid #ffd600;
+      border: 2px solid #ffc10745;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .program-card:hover {
+      box-shadow: 0 14px 38px #00bcd438, 0 2.5px 20px #ffc10755;
+      transform: translateY(-7px) scale(1.03);
     }
     .prog-name {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #2196f3;
-      margin-bottom: 8px;
-      text-shadow: 0 0 4px #fff;
+      font-size: 1.24rem;
+      font-weight: 700;
+      color: #ffc107;
+      margin-bottom: 14px;
+      text-shadow: 0 0 2px #fff, 0 2px 8px #00bcd4cc;
     }
     .prog-desc {
-      font-size: 1rem;
-      color: #ededed;
-      margin-bottom: 12px;
+      font-size: 1.01rem;
+      color: #f1f1f1;
+      margin-bottom: 23px;
+      font-weight: 500;
+      line-height: 1.6;
     }
-    .prog-desc span {
+    .prog-desc .profit {
       font-weight: bold;
-      text-shadow: 0 0 2px #fff;
+      color: #43a047;
+      text-shadow: 0 0 2px #ffd600;
     }
-    .prog-link {
-      display: inline-block;
-      background: linear-gradient(90deg,#ff9800 30%, #2196f3 70%);
+    .prog-desc .low {
+      color: #ffc107;
+    }
+    .prog-desc .high {
+      color: #43a047;
+    }
+    .prog-action {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+    }
+    .prog-btn {
+      padding: 12px 29px;
+      background: linear-gradient(90deg, #ffc107 0%, #00bcd4 100%);
+      color: #222;
+      font-weight: 700;
+      font-size: 1.04rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      box-shadow: 0 2px 10px #ffc10733;
+      margin-right: 10px;
+      z-index: 1;
+    }
+    .prog-btn:hover, .prog-btn:focus {
+      background: linear-gradient(90deg, #00bcd4 0%, #ffc107 100%);
+      color: #fff;
+      transform: scale(1.06);
+    }
+
+    /* Card Loader Overlay */
+    .card-loader-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 11, 16, 0.98);
+      z-index: 3;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 22px;
+      transition: 0.2s;
+    }
+    .card-loader-overlay.active {
+      display: flex;
+      animation: fadeIn 0.35s;
+    }
+    .card-loader-img-spin {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 3px solid #ffc107;
+      background: #fff;
+      object-fit: cover;
+      animation: loaderSpin 1s linear infinite;
+      margin-bottom: 19px;
+      box-shadow: 0 0 14px #00bcd4;
+      display: block;
+    }
+    .card-loader-typing {
+      font-size: 1.13rem;
       color: #fff;
       font-weight: 600;
-      padding: 7px 18px;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-      font-size: 1rem;
-      box-shadow: 0 2px 8px #2196f388;
+      text-align: center;
+      min-height: 54px;
+      letter-spacing: 0.5px;
+      padding: 0 8px;
+      margin-bottom: 0;
+      text-shadow: 0 0 8px #00bcd4;
+      border-radius: 8px;
+      background: none;
+      word-break: break-word;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      border-left: 2.5px solid #ffc107;
+      padding-left: 10px;
     }
-    .prog-link:hover {
-      background: linear-gradient(90deg,#2196f3 30%, #ff9800 70%);
-      color: #fff;
-      transform: scale(1.07);
+
+    @media (max-width: 900px) {
+      .programs-flex {
+        flex-direction: column;
+        gap: 26px;
+        align-items: center;
+      }
+      .program-card {
+        min-width: 0;
+        width: 96vw;
+        max-width: 400px;
+      }
+      .main-content {
+        padding-top: 25px;
+      }
     }
-    @media (max-width: 500px) {
-      .program-list {
-        width: 98vw;
+    @media (max-width: 600px) {
+      .main-content {
+        padding-top: 10px;
+      }
+      .main-title {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      .app-logo {
+        width: 50px; height: 50px;
+        margin-bottom: 10px;
+      }
+      .program-card {
+        padding: 15px 5px 10px 5px;
+      }
+      .card-loader-typing {
+        font-size: 1rem;
+        min-height: 38px;
+        padding-left: 6px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Loader Layout -->
-  <div class="loader-bg" id="loaderScreen">
-      <!-- Loader Image (rotating) - replace src with your logo/image if needed -->
-      <img src="-5890865169557472356_109.jpg" alt="EmpireStateBank Loader" class="loader-img">
-      <div class="blinking" id="welcomeMsg">Welcome to EmpireStateBank Program</div>
-      <div class="loader-caption">Please wait while we prepare your experience...</div>
+  <!-- Main Loader -->
+  <div class="main-loader" id="mainLoader">
+    <div class="loader-spinner-wrap">
+      <img src="-5890865169557472356_109.jpg" class="loader-img-spin" alt="Empire Loader" />
+    </div>
+    <div class="loader-title">EmpireStateBank Project</div>
+    <div class="loader-caption">Setting up your secure experience. Please wait...</div>
   </div>
-  <!-- Program Select Page -->
-  <div class="program-select" id="programScreen">
-    <!-- Image before the program selection (replace src as needed) -->
-    <img src="-5890865169557472356_109.jpg" alt="EmpireStateBank Icon" class="program-img">
-    <div class="program-title">Select Your Preferred Program</div>
-    <div class="program-list">
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <div class="app-logo-wrap">
+      <img src="-5890865169557472356_109.jpg" class="app-logo" alt="EmpireStateBank Icon" />
+    </div>
+    <div class="main-title">Welcome to EmpireStateBank</div>
+    <div class="subtitle">Please select your preferred program below</div>
+    <div class="programs-flex">
+      <!-- Card 1 -->
       <div class="program-card">
         <div class="prog-name">EmpireBot</div>
-        <div class="prog-desc">Betting Odd Trading: <span style="color:#ffd600;">Low profit</span>.</div>
-        <a class="prog-link" href="https://empirestatebank.github.io/EmpireStateBank//" target="_blank">Open EmpireBot</a>
+        <div class="prog-desc">
+          Betting Odd Trading: 
+          <span class="profit low">Low profit</span>.
+        </div>
+        <div class="prog-action">
+          <button class="prog-btn" 
+            data-url="https://empirestatebank.github.io/EmpireStateBank//"
+            data-type="empirebot">
+            Open EmpireBot
+          </button>
+        </div>
+        <div class="card-loader-overlay">
+          <img src="-5890865169557472356_109.jpg" class="card-loader-img-spin" alt="Loading..." />
+          <div class="card-loader-typing"></div>
+        </div>
       </div>
+      <!-- Card 2 -->
       <div class="program-card">
         <div class="prog-name">EmpireBet</div>
-        <div class="prog-desc">Football betting Tips: <span style="color:#e91e63;">High Profit</span>.</div>
-        <a class="prog-link" href="https://empirestatebank.github.io/Empire-Betting-Tips//" target="_blank">Open EmpireBet</a>
+        <div class="prog-desc">
+          Football Betting Tips: 
+          <span class="profit high">High profit</span>.
+        </div>
+        <div class="prog-action">
+          <button class="prog-btn" 
+            data-url="https://empirestatebank.github.io/Empire-Betting-Tips//"
+            data-type="empirebet">
+            Open EmpireBet
+          </button>
+        </div>
+        <div class="card-loader-overlay">
+          <img src="-5890865169557472356_109.jpg" class="card-loader-img-spin" alt="Loading..." />
+          <div class="card-loader-typing"></div>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Script -->
   <script>
-    // Show loader/welcome for 7 seconds, then show program selection screen
-    setTimeout(function() {
-      document.getElementById('loaderScreen').style.display = 'none';
-      document.getElementById('programScreen').style.display = 'flex';
-      document.body.style.overflow = 'auto';
-    }, 7000);
+    // Initial loader: show for 7s, then show main content
+    window.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        document.getElementById('mainLoader').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('mainLoader').style.display = 'none';
+          document.getElementById('mainContent').classList.add('active');
+          document.body.style.overflow = 'auto';
+        }, 400);
+      }, 7000);
+    });
+
+    // Typing texts per program, clear and to the point
+    const typingTexts = {
+      empirebot: "EmpireBot is trading for you. Watch your investment multiply safely with smart, automated strategies from EmpireStateBank.",
+      empirebet: "EmpireBet is preparing the most accurate football predictions. Win confidently with our expert betting tips, every single time."
+    };
+
+    // Typewriter effect for the loading overlay
+    function typeText(element, text, duration = 15000) {
+      element.textContent = '';
+      let i = 0;
+      const total = text.length;
+      const interval = Math.max(22, duration / total);
+      function type() {
+        if (i <= total) {
+          element.textContent = text.slice(0, i) + (i < total ? "|" : "");
+          i++;
+          setTimeout(type, interval);
+        }
+      }
+      type();
+    }
+
+    // Handle Program Card Button Clicks
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = document.querySelectorAll('.prog-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+
+          // Hide all overlays and re-enable all buttons first
+          document.querySelectorAll('.card-loader-overlay').forEach(l => l.classList.remove('active'));
+          document.querySelectorAll('.prog-btn').forEach(b => b.disabled = false);
+
+          // Show overlay for this card only
+          const card = btn.closest('.program-card');
+          const overlay = card.querySelector('.card-loader-overlay');
+          const typingDiv = overlay.querySelector('.card-loader-typing');
+          const type = btn.getAttribute('data-type');
+
+          // Set the message and start typing
+          let text = typingTexts[type] || "Loading, please wait...";
+          overlay.classList.add('active');
+          typingDiv.textContent = '';
+          btn.disabled = true;
+          document.getElementById('mainContent').style.opacity = '0.3';
+
+          typeText(typingDiv, text, 15000);
+
+          // Wait 15 seconds, then open link
+          setTimeout(() => {
+            window.location.href = btn.dataset.url;
+          }, 15000);
+        });
+      });
+    });
   </script>
 </body>
 </html>
