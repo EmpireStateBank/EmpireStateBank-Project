@@ -5,79 +5,138 @@
   <title>EmpireStateBank Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --main-bg: #f4f6fc;
+      --header-bg: #14426a;
+      --accent1: #1aa1c7;
+      --accent2: #f34b4b;
+      --card-bg: #e8f0fa;
+      --card-border: #1aa1c7;
+      --text-header: #fff;
+      --text-main: #222;
+      --profit-low: #f34b4b;
+      --profit-high: #1aa1c7;
+    }
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
-      background: #101014;
-      color: #fff;
+      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      background: var(--main-bg);
+      color: var(--text-main);
       overflow: hidden;
     }
 
-    /* Main Loader Styles */
+    /* Loader overlay */
     .main-loader {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
+      background: var(--header-bg);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(ellipse at center, #191a1e 85%, #101014 100%);
       z-index: 1000;
-      transition: opacity 0.4s;
+      transition: opacity 0.3s;
     }
-    .main-loader .loader-spinner-wrap {
-      margin-bottom: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .main-loader .loader-img-spin {
-      width: 95px;
-      height: 95px;
+    .loader-img-spin {
+      width: 90px;
+      height: 90px;
       border-radius: 50%;
-      border: 4px solid #fff;
-      object-fit: cover;
+      border: 6px solid var(--accent1);
       background: #fff;
-      box-shadow: 0 0 28px #ffc10799, 0 0 13px #00bcd4bb;
-      animation: loaderSpin 1.2s linear infinite;
-      display: block;
+      object-fit: cover;
+      animation: loaderSpin 1s linear infinite;
+      margin-bottom: 32px;
     }
     @keyframes loaderSpin {
-      0% { transform: rotate(0deg);}
+      0% { transform: rotate(0);}
       100% { transform: rotate(360deg);}
     }
-    .main-loader .loader-title {
-      font-size: 2.3rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
+    .loader-title {
+      font-size: 2.05rem;
+      font-weight: 900;
+      color: var(--accent1);
       margin-bottom: 14px;
-      color: #ffc107;
-      text-shadow: 0 0 18px #00bcd4, 0 0 3px #fff;
       text-align: center;
-      animation: fadeInDown 1.1s;
-    }
-    .main-loader .loader-caption {
-      color: #fff;
-      font-size: 1.17rem;
       letter-spacing: 1.2px;
-      font-weight: 500;
+    }
+    .loader-caption {
+      font-size: 1.22rem;
+      font-weight: 700;
       text-align: center;
-      animation: fadeIn 2s;
-      text-shadow: 0 0 8px #00bcd4cc;
+      color: #fff;
+      letter-spacing: 2px;
+      margin-bottom: 0;
+      position: relative;
+      overflow: visible;
     }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    .loader-caption .underline {
+      position: absolute;
+      left: 0; right: 0; top: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent1));
+      border-radius: 3px;
+      animation: underlineSlide 1.2s infinite cubic-bezier(.5,.1,.5,1);
     }
-    @keyframes fadeInDown {
-      from {opacity: 0; transform: translateY(-30px);}
-      to {opacity: 1; transform: translateY(0);}
+    @keyframes underlineSlide {
+      0% { width: 0; opacity: 1;}
+      40% { width: 100%; opacity: 1;}
+      60% { width: 100%; opacity: 1;}
+      75% { width: 0; opacity: 1;}
+      100% { width: 0; opacity: 0;}
+    }
+    .loader-caption .dot {
+      display: inline-block;
+      font-weight: bold;
+      color: var(--accent2);
+      animation: loaderDotPulse 1.1s infinite;
+    }
+    .loader-caption .dot:nth-child(2) { animation-delay: 0.2s; }
+    .loader-caption .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes loaderDotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.75;}
+      50% { transform: scale(1.6); opacity: 1;}
     }
 
-    /* Main Content Layout */
+    /* Header Bar */
+    .header-bar {
+      width: 100vw;
+      background: var(--header-bg);
+      padding: 25px 0 15px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      justify-content: center;
+    }
+    .header-bar .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-bar .app-logo {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      border: 2px solid var(--accent1);
+      object-fit: cover;
+      background: #fff;
+    }
+    .header-bar .main-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--text-header);
+      letter-spacing: 1.2px;
+    }
+    .header-bar .subtitle {
+      color: var(--accent1);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-left: 16px;
+      letter-spacing: 1px;
+    }
+
+    /* Main Content */
     .main-content {
       min-height: 100vh;
       width: 100vw;
@@ -85,275 +144,270 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding-top: 48px;
-      background: #101014;
+      padding-top: 32px;
+      background: var(--main-bg);
       opacity: 0;
-      transition: opacity 0.7s;
+      transition: opacity 0.6s;
       position: relative;
       z-index: 1;
     }
     .main-content.active {
       opacity: 1;
     }
-    .app-logo-wrap {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .app-logo {
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
-      border: 2.5px solid #ffc107;
-      box-shadow: 0 0 16px #00bcd455;
-      object-fit: cover;
-      background: #fff;
-      display: block;
-    }
-    .main-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 1.2px;
-      margin-bottom: 10px;
-      text-align: center;
-      text-shadow: 0 2px 18px #00bcd433;
-    }
-    .subtitle {
-      color: #00bcd4;
-      font-size: 1.13rem;
-      font-weight: 600;
-      margin-bottom: 30px;
-      text-align: center;
-      letter-spacing: 1.1px;
-    }
 
-    /* Programs Flex Grid */
-    .programs-flex {
+    .programs-stack {
       display: flex;
-      gap: 32px;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      gap: 34px;
+      align-items: center;
       width: 95vw;
-      max-width: 830px;
+      max-width: 430px;
       margin: 0 auto;
     }
 
-    /* Card */
     .program-card {
-      background: linear-gradient(120deg, #17191e 74%, #23282e 100%);
-      border-radius: 22px;
-      box-shadow: 0 8px 30px #00bcd41a, 0 1.5px 12px #ffc10744;
-      padding: 36px 22px 26px 22px;
-      min-width: 265px;
-      max-width: 340px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 2.5px solid var(--card-border);
+      padding: 32px 18px 22px 18px;
+      min-width: 200px;
+      max-width: 400px;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      border: 2px solid #ffc10745;
       position: relative;
       overflow: hidden;
-      margin-bottom: 10px;
-    }
-    .program-card:hover {
-      box-shadow: 0 14px 38px #00bcd438, 0 2.5px 20px #ffc10755;
-      transform: translateY(-7px) scale(1.03);
+      margin-bottom: 0;
     }
     .prog-name {
-      font-size: 1.24rem;
+      font-size: 1.18rem;
       font-weight: 700;
-      color: #ffc107;
-      margin-bottom: 14px;
-      text-shadow: 0 0 2px #fff, 0 2px 8px #00bcd4cc;
+      color: var(--accent2);
+      margin-bottom: 10px;
+      letter-spacing: 1.2px;
     }
     .prog-desc {
-      font-size: 1.01rem;
-      color: #f1f1f1;
-      margin-bottom: 23px;
+      font-size: 1.03rem;
+      color: var(--text-main);
+      margin-bottom: 19px;
       font-weight: 500;
       line-height: 1.6;
     }
     .prog-desc .profit {
       font-weight: bold;
-      color: #43a047;
-      text-shadow: 0 0 2px #ffd600;
+      text-shadow: none;
     }
     .prog-desc .low {
-      color: #ffc107;
+      color: var(--profit-low);
     }
     .prog-desc .high {
-      color: #43a047;
+      color: var(--profit-high);
     }
     .prog-action {
       display: flex;
-      align-items: center;
       width: 100%;
       position: relative;
+      margin-top: auto;
+      align-items: center;
+      justify-content: flex-end;
     }
     .prog-btn {
-      padding: 12px 29px;
-      background: linear-gradient(90deg, #ffc107 0%, #00bcd4 100%);
-      color: #222;
+      padding: 12px 30px;
+      background: var(--accent1);
+      color: #fff;
       font-weight: 700;
-      font-size: 1.04rem;
+      font-size: 1rem;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       outline: none;
-      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-      box-shadow: 0 2px 10px #ffc10733;
-      margin-right: 10px;
-      z-index: 1;
+      margin-right: 0;
+      transition: background 0.2s;
     }
     .prog-btn:hover, .prog-btn:focus {
-      background: linear-gradient(90deg, #00bcd4 0%, #ffc107 100%);
+      background: var(--accent2);
       color: #fff;
-      transform: scale(1.06);
     }
 
-    /* Card Loader Overlay */
     .card-loader-overlay {
       display: none;
       position: absolute;
       top: 0; left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 11, 16, 0.98);
+      background: rgba(44, 62, 80, 0.93);
       z-index: 3;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-radius: 22px;
+      border-radius: 14px;
       transition: 0.2s;
     }
     .card-loader-overlay.active {
       display: flex;
       animation: fadeIn 0.35s;
     }
-    .card-loader-img-spin {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: 3px solid #ffc107;
-      background: #fff;
-      object-fit: cover;
-      animation: loaderSpin 1s linear infinite;
-      margin-bottom: 19px;
-      box-shadow: 0 0 14px #00bcd4;
-      display: block;
+    .card-loader-wavebars {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 12px;
+      height: 26px;
+    }
+    .card-loader-wavebar {
+      width: 7px;
+      height: 18px;
+      border-radius: 3px;
+      background: var(--accent1);
+      animation: wavebarUpDown 1s infinite;
+    }
+    .card-loader-wavebar:nth-child(2) {
+      animation-delay: 0.15s;
+      background: var(--accent2);
+    }
+    .card-loader-wavebar:nth-child(3) {
+      animation-delay: 0.3s;
+      background: var(--accent1);
+    }
+    .card-loader-wavebar:nth-child(4) {
+      animation-delay: 0.45s;
+      background: var(--accent2);
+    }
+    .card-loader-wavebar:nth-child(5) {
+      animation-delay: 0.6s;
+      background: var(--accent1);
+    }
+    @keyframes wavebarUpDown {
+      0%,100% { height: 14px; }
+      50% { height: 28px; }
     }
     .card-loader-typing {
-      font-size: 1.13rem;
+      font-size: 1.09rem;
       color: #fff;
       font-weight: 600;
       text-align: center;
-      min-height: 54px;
+      min-height: 30px;
       letter-spacing: 0.5px;
       padding: 0 8px;
-      margin-bottom: 0;
-      text-shadow: 0 0 8px #00bcd4;
-      border-radius: 8px;
-      background: none;
-      word-break: break-word;
+      margin-bottom: 10px;
       font-family: 'Fira Mono', 'Consolas', monospace;
-      border-left: 2.5px solid #ffc107;
+      border-left: 2px solid var(--accent1);
       padding-left: 10px;
+      animation: fadeInText 1.2s infinite alternate;
+      display: inline-block;
     }
-
-    @media (max-width: 900px) {
-      .programs-flex {
+    @keyframes fadeInText {
+      0% { opacity: 0.2; }
+      100% { opacity: 1;}
+    }
+    .card-loader-note {
+      font-size: 0.97rem;
+      color: #ffe;
+      background: rgba(26,161,199,0.12);
+      border-radius: 7px;
+      padding: 8px 14px;
+      margin-top: 8px;
+      margin-bottom: 0;
+      text-align: center;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      letter-spacing: 0.8px;
+      border-left: 2px solid var(--accent1);
+      padding-left: 10px;
+      min-height: 22px;
+    }
+    @media (max-width: 700px) {
+      .header-bar {
         flex-direction: column;
-        gap: 26px;
-        align-items: center;
-      }
-      .program-card {
-        min-width: 0;
-        width: 96vw;
-        max-width: 400px;
+        gap: 6px;
+        padding: 12px 0 7px 0;
       }
       .main-content {
-        padding-top: 25px;
+        padding-top: 8px;
+      }
+      .program-card {
+        padding: 12px 4px 10px 4px;
       }
     }
-    @media (max-width: 600px) {
-      .main-content {
-        padding-top: 10px;
-      }
-      .main-title {
-        font-size: 1.2rem;
-        margin-bottom: 8px;
-      }
-      .app-logo {
-        width: 50px; height: 50px;
-        margin-bottom: 10px;
-      }
+    @media (max-width: 500px) {
       .program-card {
-        padding: 15px 5px 10px 5px;
-      }
-      .card-loader-typing {
-        font-size: 1rem;
-        min-height: 38px;
-        padding-left: 6px;
+        padding: 7px 2px 7px 2px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Main Loader -->
+  <!-- Loader Overlay with new animation style -->
   <div class="main-loader" id="mainLoader">
-    <div class="loader-spinner-wrap">
-      <img src="-5890865169557472356_109.jpg" class="loader-img-spin" alt="Empire Loader" />
-    </div>
+    <img src="-5890865169557472356_109.jpg" class="loader-img-spin" alt="Empire Loader" />
     <div class="loader-title">EmpireStateBank Project</div>
-    <div class="loader-caption">Setting up your secure experience. Please wait...</div>
+    <div class="loader-caption" id="loaderCaption">
+      Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+      <span class="underline"></span>
+    </div>
+  </div>
+
+  <!-- Header Bar -->
+  <div class="header-bar">
+    <div class="logo-wrap">
+      <img src="-5890865169557472356_109.jpg" class="app-logo" alt="EmpireStateBank Icon" />
+      <span class="main-title">EmpireStateBank</span>
+    </div>
+    <span class="subtitle">Select your preferred program below</span>
   </div>
 
   <!-- Main Content -->
   <div class="main-content" id="mainContent">
-    <div class="app-logo-wrap">
-      <img src="-5890865169557472356_109.jpg" class="app-logo" alt="EmpireStateBank Icon" />
-    </div>
-    <div class="main-title">Welcome to EmpireStateBank</div>
-    <div class="subtitle">Please select your preferred program below</div>
-    <div class="programs-flex">
+    <div class="programs-stack">
       <!-- Card 1 -->
       <div class="program-card">
         <div class="prog-name">EmpireBot</div>
         <div class="prog-desc">
-          Betting Odd Trading: 
-          <span class="profit low">Low profit</span>.
+          Automated trading on betting odds with <span class="profit low">Low profit</span>, safe and steady.
         </div>
         <div class="prog-action">
           <button class="prog-btn" 
             data-url="https://empirestatebank.github.io/EmpireStateBank//"
             data-type="empirebot">
-            Open EmpireBot
+            Launch EmpireBot
           </button>
         </div>
         <div class="card-loader-overlay">
-          <img src="-5890865169557472356_109.jpg" class="card-loader-img-spin" alt="Loading..." />
+          <div class="card-loader-wavebars">
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+          </div>
           <div class="card-loader-typing"></div>
+          <div class="card-loader-note" id="note-empirebot"></div>
         </div>
       </div>
       <!-- Card 2 -->
       <div class="program-card">
         <div class="prog-name">EmpireBet</div>
         <div class="prog-desc">
-          Football Betting Tips: 
-          <span class="profit high">High profit</span>.
+          Football betting tips with <span class="profit high">High profit</span> potential. Expert picks, every match!
         </div>
         <div class="prog-action">
           <button class="prog-btn" 
             data-url="https://empirestatebank.github.io/Empire-Betting-Tips//"
             data-type="empirebet">
-            Open EmpireBet
+            Launch EmpireBet
           </button>
         </div>
         <div class="card-loader-overlay">
-          <img src="-5890865169557472356_109.jpg" class="card-loader-img-spin" alt="Loading..." />
+          <div class="card-loader-wavebars">
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+            <div class="card-loader-wavebar"></div>
+          </div>
           <div class="card-loader-typing"></div>
+          <div class="card-loader-note" id="note-empirebet"></div>
         </div>
       </div>
     </div>
@@ -361,7 +415,7 @@
 
   <!-- Script -->
   <script>
-    // Initial loader: show for 7s, then show main content
+    // Loader: show for 6s, then show main content
     window.addEventListener('DOMContentLoaded', function () {
       setTimeout(function () {
         document.getElementById('mainLoader').style.opacity = '0';
@@ -369,22 +423,22 @@
           document.getElementById('mainLoader').style.display = 'none';
           document.getElementById('mainContent').classList.add('active');
           document.body.style.overflow = 'auto';
-        }, 400);
-      }, 7000);
+        }, 300);
+      }, 6000);
     });
 
-    // Typing texts per program, clear and to the point
+    // Typing texts per program
     const typingTexts = {
       empirebot: "EmpireBot is trading for you. Watch your investment multiply safely with smart, automated strategies from EmpireStateBank.",
       empirebet: "EmpireBet is preparing the most accurate football predictions. Win confidently with our expert betting tips, every single time."
     };
 
-    // Typewriter effect for the loading overlay
-    function typeText(element, text, duration = 15000) {
+    // Typewriter effect for loader note
+    function typeText(element, text, duration = 6000) {
       element.textContent = '';
       let i = 0;
       const total = text.length;
-      const interval = Math.max(22, duration / total);
+      const interval = Math.max(16, duration / total);
       function type() {
         if (i <= total) {
           element.textContent = text.slice(0, i) + (i < total ? "|" : "");
@@ -395,36 +449,44 @@
       type();
     }
 
+    // Card loading overlay animation
+    function showCardLoader(btn, type, duration) {
+      // Hide all overlays and re-enable all buttons first
+      document.querySelectorAll('.card-loader-overlay').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.prog-btn').forEach(b => b.disabled = false);
+
+      // Show overlay for this card only
+      const card = btn.closest('.program-card');
+      const overlay = card.querySelector('.card-loader-overlay');
+      const typingDiv = overlay.querySelector('.card-loader-typing');
+      const noteDiv = overlay.querySelector('.card-loader-note');
+      btn.disabled = true;
+      card.style.opacity = '0.7';
+
+      // Set the animated text
+      typingDiv.textContent = (type === 'empirebot') ? 'Launching EmpireBot...' : 'Launching EmpireBet...';
+
+      // Typewriter effect for the note
+      let noteText = (type === 'empirebot')
+        ? "EmpireBot is trading for you. Watch your investment multiply safely with smart, automated strategies from EmpireStateBank."
+        : "EmpireBet is preparing the most accurate football predictions. Win confidently with our expert betting tips, every single time.";
+
+      typeText(noteDiv, noteText, duration);
+
+      overlay.classList.add('active');
+
+      setTimeout(() => {
+        window.location.href = btn.dataset.url;
+      }, duration);
+    }
+
     // Handle Program Card Button Clicks
     document.addEventListener('DOMContentLoaded', function () {
       const buttons = document.querySelectorAll('.prog-btn');
       buttons.forEach(btn => {
         btn.addEventListener('click', function (e) {
           e.preventDefault();
-
-          // Hide all overlays and re-enable all buttons first
-          document.querySelectorAll('.card-loader-overlay').forEach(l => l.classList.remove('active'));
-          document.querySelectorAll('.prog-btn').forEach(b => b.disabled = false);
-
-          // Show overlay for this card only
-          const card = btn.closest('.program-card');
-          const overlay = card.querySelector('.card-loader-overlay');
-          const typingDiv = overlay.querySelector('.card-loader-typing');
-          const type = btn.getAttribute('data-type');
-
-          // Set the message and start typing
-          let text = typingTexts[type] || "Loading, please wait...";
-          overlay.classList.add('active');
-          typingDiv.textContent = '';
-          btn.disabled = true;
-          document.getElementById('mainContent').style.opacity = '0.3';
-
-          typeText(typingDiv, text, 15000);
-
-          // Wait 15 seconds, then open link
-          setTimeout(() => {
-            window.location.href = btn.dataset.url;
-          }, 15000);
+          showCardLoader(btn, btn.getAttribute('data-type'), 6000);
         });
       });
     });
